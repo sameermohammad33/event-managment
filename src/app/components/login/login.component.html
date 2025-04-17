@@ -1,0 +1,59 @@
+<div class="login-container">
+  <!-- Beautiful Navbar -->
+  <nav class="navbar">
+    <div class="navbar-brand">
+      <h1>Event Management System</h1>
+    </div>
+    <div class="navbar-links">
+      <a class="nav-link" routerLink="/register">
+        <button class="nav-button">
+          <i class="fas fa-user-plus"></i> Register
+        </button>
+      </a>
+    </div>
+  </nav>
+
+  <!-- Main Login Form -->
+  <div class="login-form-container">
+    <div class="login-card">
+      <div class="card-header">
+        <h2><i class="fas fa-sign-in-alt"></i> Welcome Back</h2>
+      </div>
+      
+      <form [formGroup]="loginForm" (ngSubmit)="onSubmit()" class="form-content">
+        <div class="form-group">
+          <label for="name"><i class="fas fa-user"></i> Name</label>
+          <input type="text" id="name" formControlName="name" placeholder="Enter your name">
+          <div *ngIf="loginForm.get('name')?.invalid && loginForm.get('name')?.touched" class="error-message">
+            Name is required
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="email"><i class="fas fa-envelope"></i> Email</label>
+          <input type="email" id="email" formControlName="email" placeholder="Enter your email">
+          <div *ngIf="loginForm.get('email')?.invalid && loginForm.get('email')?.touched" class="error-message">
+            Valid email is required
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="password"><i class="fas fa-lock"></i> Password</label>
+          <input type="password" id="password" formControlName="password" placeholder="Enter your password">
+          <div *ngIf="loginForm.get('password')?.invalid && loginForm.get('password')?.touched" class="error-message">
+            Password is required
+          </div>
+        </div>
+
+        <button type="submit" class="submit-button" [disabled]="loginForm.invalid">
+          <i class="fas fa-sign-in-alt"></i> Login
+        </button>
+
+        <div class="register-link">
+          Don't have an account? <a routerLink="/register">Register here</a>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
