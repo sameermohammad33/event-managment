@@ -4,7 +4,10 @@ import { AuthService } from '../../service/auth.service';
 import { EventService } from '../../service/event.service';
 import { TicketService } from '../../service/ticket.service';
 import { FeedbackService } from '../../service/feedback.service';
+import { NotificationService } from '../../service/notification.service';
 import { CommonModule, DatePipe } from '@angular/common';
+import { interval } from 'rxjs';
+import { startWith, switchMap } from 'rxjs/operators';
 
 @Component({
   selector: 'app-home',
@@ -31,11 +34,19 @@ export class HomeComponent implements OnInit {
   feedbackForm: FormGroup;
   eventRatings: { [key: number]: number } = {};
 
+  // Notification related
+  private notificationRefreshInterval = 30000;
+  showNotification = false;
+  notifications: any[] = [];
+  currentNotification: any = null;
+  notificationForm: FormGroup;
+
   constructor(
     private authService: AuthService,
     private eventService: EventService,
     private ticketService: TicketService,
     private feedbackService: FeedbackService,
+    private notificationService: NotificationService,
     private fb: FormBuilder
   ) {
     // Initialize event creation/editing form
@@ -53,6 +64,12 @@ export class HomeComponent implements OnInit {
       rating: ['', [Validators.required, Validators.min(1), Validators.max(5)]],
       eventId: ['', Validators.required]
     });
+
+    // Initialize notification form (for admin) 
+    this.notificationForm = this.fb.group({
+      eventId: ['', Validators.required],
+      message: ['', [Validators.required, Validators.minLength(10)]]
+    });
   }
 
   ngOnInit(): void {
@@ -66,6 +83,17 @@ export class HomeComponent implements OnInit {
     if (this.userRole === 'USER' || this.userRole === 'ADMIN') {
       this.loadEvents();
     }
+
+    // Load notifications for user
+    if (this.userRole === 'USER' && this.userId) {
+      this.loadNotifications();
+    }
+
+    // Set up notification polling
+    if (this.userRole === 'USER' && this.userId) {
+      this.setupNotificationPolling();
+    }
+
   }
 
   // Load all events
@@ -245,7 +273,82 @@ export class HomeComponent implements OnInit {
     this.authService.logout();
     window.location.href = '/login';
   }
+
+
+ // Load notifications for user
+ loadNotifications(): void {
+  this.notificationService.getUserNotifications(this.userId!).subscribe({
+    next: (notifications) => {
+      this.notifications = notifications;
+      if (this.notifications.length > 0) {
+        this.showNextNotification();
+      }
+    },
+    error: (err) => {
+      console.error('Failed to load notifications', err);
+    }
+  });
 }
 
+// Show next notification in queue
+showNextNotification(): void {
+  if (this.notifications.length > 0) {
+    this.currentNotification = this.notifications[0];
+    this.showNotification = true;
+  }
+}
 
+// Close current notification
+closeNotification(notificationId: number): void {
+  this.notificationService.deleteNotification(notificationId).subscribe({
+    next: () => {
+      this.showNotification = false;
+      this.notifications = this.notifications.filter(n => n.notificationId !== notificationId);
+      setTimeout(() => this.showNextNotification(), 500);
+    },
+    error: (err) => {
+      console.error('Failed to delete notification', err);
+    }
+  });
+}
+ 
+// Admin sends notification
+onSendNotification(): void {
+  if (this.notificationForm.valid) {
+    const eventId = this.notificationForm.value.eventId;
+    const message = this.notificationForm.value.message;
+
+    this.notificationService.sendNotification(this.userId!, eventId, message).subscribe({
+      next: (response) => {
+        alert('Notification sent successfully!');
+        this.notificationForm.reset();
+      },
+      error: (err) => {
+        alert(`Failed to send notification: ${err.error || 'Unknown error'}`);
+      }
+    });
+  }
+}
+
+// Notification Polling 
+private setupNotificationPolling() : void {
+  interval(this.notificationRefreshInterval)
+  .pipe(
+    startWith(0),
+    switchMap(() => this.notificationService.getUserNotifications(this.userId!))
+  )
+  .subscribe({
+    next: (notifications) => {
+      this.notifications = notifications;
+      if (this.notifications.length > 0 && !this.currentNotification) {
+        this.showNextNotification();
+      }
+    },
+    error: (err) => {
+      console.error(err);
+    }
+  })
+}
+
+}
 
