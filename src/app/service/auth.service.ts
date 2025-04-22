@@ -57,6 +57,31 @@ export class AuthService {
     });
   }
 
+  getUserDetails(userId: number): Observable<any> {
+    return this.http.get(`${API_URL}/User/getUserById/${userId}`, {
+      headers: {
+        'Authorization': `Bearer ${this.getToken()}`
+      }
+    });
+  }
+  
+  updateUser(userId: number, userData: any): Observable<any> {
+    return this.http.patch(`${API_URL}/User/updateUser/${userId}`, userData, {
+      headers: {
+        'Authorization': `Bearer ${this.getToken()}`
+      },
+      responseType: 'text'
+    });
+  }
+  
+  changePassword(userId: number, passwordData: {currentPassword: string, newPassword: string}): Observable<any> {
+    return this.http.post(`${API_URL}/User/changePassword/${userId}`, passwordData, {
+      headers: {
+        'Authorization': `Bearer ${this.getToken()}`
+      }
+    });
+  }
+
 }
 
 
