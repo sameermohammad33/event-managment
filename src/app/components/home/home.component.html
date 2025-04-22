@@ -1,31 +1,29 @@
 <div class="home-container">
-
   <!-- Notification Popup -->
-<div *ngIf="showNotification && currentNotification" class="notification-popup">
-  <div class="notification-card">
-    <div class="notification-header">
-      <h4><i class="fas fa-bell"></i> New Notification</h4>
-      <button class="close-btn" (click)="closeNotification(currentNotification.notificationId)">
-        <i class="fas fa-times"></i>
-      </button>
-    </div>
-    <div class="notification-body">
-      <p>{{currentNotification.message}}</p>
-      <p class="notification-meta">
-        <small>
-          <i class="fas fa-calendar-alt"></i> 
-          {{currentNotification.sentTimestamp | date:'medium'}}
-        </small>
-      </p>
-    </div>
-    <div class="notification-footer">
-      <button class="btn btn-primary" (click)="closeNotification(currentNotification.notificationId)">
-        <i class="fas fa-check"></i> Dismiss
-      </button>
+  <div *ngIf="showNotification && currentNotification" class="notification-popup">
+    <div class="notification-card">
+      <div class="notification-header">
+        <h4><i class="fas fa-bell"></i> New Notification</h4>
+        <button class="close-btn" (click)="closeNotification(currentNotification.notificationId)">
+          <i class="fas fa-times"></i>
+        </button>
+      </div>
+      <div class="notification-body">
+        <p>{{currentNotification.message}}</p>
+        <p class="notification-meta">
+          <small>
+            <i class="fas fa-calendar-alt"></i> 
+            {{currentNotification.sentTimestamp | date:'medium'}}
+          </small>
+        </p>
+      </div>
+      <div class="notification-footer">
+        <button class="btn btn-primary" (click)="closeNotification(currentNotification.notificationId)">
+          <i class="fas fa-check"></i> Dismiss
+        </button>
+      </div>
     </div>
   </div>
-</div>
-
 
   <!-- Beautiful Navbar -->
   <nav class="navbar">
@@ -33,11 +31,111 @@
       <h1>Event Management System</h1>
     </div>
     <div class="navbar-links">
+      <button class="nav-button profile-button" (click)="toggleProfile()">
+        <i class="fas fa-user-circle"></i> Profile
+      </button>
       <button class="nav-button" (click)="logout()">
         <i class="fas fa-sign-out-alt"></i> Logout
       </button>
     </div>
   </nav>
+
+  <!-- Profile Section -->
+  <div *ngIf="showProfile" class="profile-section">
+    <div class="profile-card">
+      <div class="profile-header">
+        <h3><i class="fas fa-user"></i> My Profile</h3>
+        <button class="close-btn" (click)="toggleProfile()">
+          <i class="fas fa-times"></i>
+        </button>
+      </div>
+      
+      <div class="profile-body">
+        <!-- User Details -->
+        <div class="profile-details">
+          <div class="detail-item">
+            <label><i class="fas fa-user"></i> Name:</label>
+            <span>{{userName}}</span>
+          </div>
+          <div class="detail-item">
+            <label><i class="fas fa-envelope"></i> Email:</label>
+            <span>{{userEmail}}</span>
+          </div>
+          <div class="detail-item">
+            <label><i class="fas fa-user-tag"></i> Role:</label>
+            <span>{{userRole}}</span>
+          </div>
+        </div>
+        
+        <!-- Update Profile Form -->
+        <div *ngIf="showUpdateForm" class="update-form">
+          <form [formGroup]="profileForm" (ngSubmit)="onUpdateProfile()">
+            <div class="form-group">
+              <label for="name"><i class="fas fa-user"></i> Name</label>
+              <input type="text" id="name" formControlName="name">
+            </div>
+            <div class="form-group">
+              <label for="email"><i class="fas fa-envelope"></i> Email</label>
+              <input type="email" id="email" formControlName="email">
+            </div>
+            <div class="form-group">
+              <label for="contact"><i class="fas fa-phone"></i> Contact Number</label>
+              <input type="text" id="contact" formControlName="contactNumber">
+            </div>
+            <button type="submit" class="btn btn-primary">Update Profile</button>
+            <button type="button" class="btn btn-secondary" (click)="showUpdateForm = false">Cancel</button>
+          </form>
+        </div>
+        
+        <!-- Change Password Form -->
+        <div *ngIf="showChangePasswordForm" class="change-password-form">
+          <form [formGroup]="passwordForm" (ngSubmit)="onChangePassword()">
+            <div class="form-group">
+              <label for="currentPassword"><i class="fas fa-lock"></i> Current Password</label>
+              <input type="password" id="currentPassword" formControlName="currentPassword">
+            </div>
+            <div class="form-group">
+              <label for="newPassword"><i class="fas fa-key"></i> New Password</label>
+              <input type="password" id="newPassword" formControlName="newPassword">
+            </div>
+            <div class="form-group">
+              <label for="confirmPassword"><i class="fas fa-key"></i> Confirm Password</label>
+              <input type="password" id="confirmPassword" formControlName="confirmPassword">
+            </div>
+            <button type="submit" class="btn btn-primary">Change Password</button>
+            <button type="button" class="btn btn-secondary" (click)="showChangePasswordForm = false">Cancel</button>
+          </form>
+        </div>
+        
+        <!-- Registered Events -->
+        <div class="registered-events">
+          <h4><i class="fas fa-calendar-check"></i> My Registered Events</h4>
+          <div *ngIf="userEvents.length === 0" class="empty-message">
+            You haven't registered for any events yet.
+          </div>
+          <div *ngFor="let event of userEvents" class="event-item">
+            <div class="event-info">
+              <h5>{{event.name}}</h5>
+              <p><i class="fas fa-calendar-day"></i> {{event.date | date:'mediumDate'}}</p>
+              <p><i class="fas fa-map-marker-alt"></i> {{event.location}}</p>
+            </div>
+            <!-- <button class="btn btn-sm btn-danger" (click)="cancelRegistration(event.ticketId)"> -->
+              <i class="fas fa-times"></i> Cancel
+            <!-- </button> -->
+          </div>
+        </div>
+      </div>
+      
+      <div class="profile-footer">
+        <button class="btn btn-primary" (click)="showUpdateForm = true; showChangePasswordForm = false">
+          <i class="fas fa-edit"></i> Update Profile
+        </button>
+        <button class="btn btn-warning" (click)="showChangePasswordForm = true; showUpdateForm = false">
+          <i class="fas fa-key"></i> Change Password
+        </button>
+      </div>
+    </div>
+  </div>
 
   <!-- Main Content -->
   <div class="home-content">
@@ -120,46 +218,98 @@
               </div>
             </div>
           </div>
-        </div>
-        <!-- Admin Notification Form (add to admin section) -->
-<div *ngIf="userRole === 'ADMIN'" class="notification-section mt-4">
-  <div class="card">
-    <div class="card-header bg-warning text-white">
-      <h4><i class="fas fa-bell"></i> Send Notification</h4>
-    </div>
-    <div class="card-body">
-      <form [formGroup]="notificationForm" (ngSubmit)="onSendNotification()">
-        <div class="form-group">
-          <label for="notificationEvent"><i class="fas fa-calendar"></i> Event</label>
-          <select id="notificationEvent" class="form-control" formControlName="eventId">
-            <option value="" disabled selected>Select an event</option>
-            <option *ngFor="let event of events" [value]="event.eventId">
-              {{event.name}} ({{event.date | date:'shortDate'}})
-            </option>
-          </select>
-          <div *ngIf="notificationForm.get('eventId')?.invalid && notificationForm.get('eventId')?.touched" 
-               class="error-message">
-            Please select an event
+
+          <!-- Admin Notification Form -->
+          <div class="notification-section mt-4">
+            <div class="card">
+              <div class="card-header bg-warning text-white">
+                <h4><i class="fas fa-bell"></i> Send Notification</h4>
+              </div>
+              <div class="card-body">
+                <form [formGroup]="notificationForm" (ngSubmit)="onSendNotification()">
+                  <div class="form-group">
+                    <label for="notificationEvent"><i class="fas fa-calendar"></i> Event</label>
+                    <select id="notificationEvent" class="form-control" formControlName="eventId">
+                      <option value="" disabled selected>Select an event</option>
+                      <option *ngFor="let event of events" [value]="event.eventId">
+                        {{event.name}} ({{event.date | date:'shortDate'}})
+                      </option>
+                    </select>
+                    <div *ngIf="notificationForm.get('eventId')?.invalid && notificationForm.get('eventId')?.touched" 
+                        class="error-message">
+                      Please select an event
+                    </div>
+                  </div>
+                  
+                  <div class="form-group">
+                    <label for="notificationMessage"><i class="fas fa-comment"></i> Message</label>
+                    <textarea id="notificationMessage" class="form-control" formControlName="message" 
+                              rows="3" placeholder="Enter notification message..."></textarea>
+                    <div *ngIf="notificationForm.get('message')?.invalid && notificationForm.get('message')?.touched" 
+                        class="error-message">
+                      Message must be at least 10 characters
+                    </div>
+                  </div>
+                  
+                  <button type="submit" class="btn btn-warning" [disabled]="notificationForm.invalid">
+                    <i class="fas fa-paper-plane"></i> Send Notification
+                  </button>
+                </form>
+              </div>
+            </div>
           </div>
         </div>
-        
-        <div class="form-group">
-          <label for="notificationMessage"><i class="fas fa-comment"></i> Message</label>
-          <textarea id="notificationMessage" class="form-control" formControlName="message" 
-                    rows="3" placeholder="Enter notification message..."></textarea>
-          <div *ngIf="notificationForm.get('message')?.invalid && notificationForm.get('message')?.touched" 
-               class="error-message">
-            Message must be at least 10 characters
+
+        <!-- Users List Section -->
+        <div *ngIf="userRole === 'ADMIN' && showUsersList" class="users-list-section mt-4">
+          <div class="card">
+            <div class="card-header bg-info text-white">
+              <h4><i class="fas fa-users"></i> Users who booked tickets for this event</h4>
+              <button class="btn btn-sm btn-light float-right" (click)="showUsersList = false">
+                <i class="fas fa-times"></i> Close
+              </button>
+            </div>
+            <div class="card-body">
+              <div *ngIf="eventUsers.length === 0" class="alert alert-info">
+                No users have booked tickets for this event yet.
+              </div>
+              
+              <div *ngIf="eventUsers.length > 0">
+                <div class="form-group">
+                  <label for="notificationMessage"><i class="fas fa-comment"></i> Notification Message</label>
+                  <textarea id="notificationMessage" class="form-control" [(ngModel)]="userNotificationMessage" 
+                            rows="3" placeholder="Enter notification message..."></textarea>
+                </div>
+                
+                <table class="table table-striped">
+                  <thead>
+                    <tr>
+                      <th>User ID</th>
+                      <th>Name</th>
+                      <th>Email</th>
+                      <th>Contact</th>
+                      <th>Action</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr *ngFor="let user of eventUsers">
+                      <td>{{user.userId}}</td>
+                      <td>{{user.name}}</td>
+                      <td>{{user.email}}</td>
+                      <td>{{user.contactNumber}}</td>
+                      <td>
+                        <button class="btn btn-sm btn-warning" (click)="sendUserNotification(user.userId)" 
+                                [disabled]="!userNotificationMessage.trim()">
+                          <i class="fas fa-paper-plane"></i> Send Notification
+                        </button>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
           </div>
         </div>
-        
-        <button type="submit" class="btn btn-warning" [disabled]="notificationForm.invalid">
-          <i class="fas fa-paper-plane"></i> Send Notification
-        </button>
-      </form>
-    </div>
-  </div>
-</div>
 
         <!-- Events Dashboard -->
         <div class="events-dashboard">
@@ -191,6 +341,19 @@
                       </div>
                       <div class="card-footer">
                         <div class="event-actions">
+                          <!-- Ticket Quantity Selector -->
+                          <div class="ticket-quantity-selector">
+                            <button class="quantity-btn" (click)="decrementTicket(event.eventId)" 
+                                    [disabled]="getTicketQuantity(event.eventId) <= 1">
+                              <i class="fas fa-minus"></i>
+                            </button>
+                            <span class="quantity">{{getTicketQuantity(event.eventId)}}</span>
+                            <button class="quantity-btn" (click)="incrementTicket(event.eventId)"
+                                    [disabled]="getTicketQuantity(event.eventId) >= 5 || getTicketQuantity(event.eventId) >= event.availableTickets">
+                              <i class="fas fa-plus"></i>
+                            </button>
+                          </div>
+                          
                           <button class="action-button book-button" 
                                   (click)="onBookTicket(event.eventId)"
                                   [disabled]="event.availableTickets <= 0">
@@ -217,7 +380,7 @@
                                   <textarea id="comments" formControlName="comments" rows="3" 
                                             placeholder="Share your experience..."></textarea>
                                   <div *ngIf="feedbackForm.get('comments')?.invalid && feedbackForm.get('comments')?.touched" 
-                                       class="error-message">
+                                      class="error-message">
                                     Feedback is required
                                   </div>
                                 </div>
@@ -225,9 +388,9 @@
                                 <div class="form-group">
                                   <label for="rating"><i class="fas fa-star"></i> Rating (1-5 stars)</label>
                                   <input type="number" id="rating" formControlName="rating" 
-                                         min="1" max="5" placeholder="Enter rating between 1 and 5">
+                                        min="1" max="5" placeholder="Enter rating between 1 and 5">
                                   <div *ngIf="feedbackForm.get('rating')?.invalid && feedbackForm.get('rating')?.touched" 
-                                       class="error-message">
+                                      class="error-message">
                                     Please enter a valid rating (1-5)
                                   </div>
                                 </div>
@@ -274,6 +437,42 @@
                           <button class="action-button edit-button" (click)="toggleEventForm(event.eventId)">
                             <i class="fas fa-edit"></i> Edit
                           </button>
+                          <button class="action-button users-button" (click)="loadUsersForEvent(event.eventId)">
+                            <i class="fas fa-users"></i> View Users
+                          </button>
+                          <button class="action-button feedback-button" (click)="toggleEventFeedbacks(event.eventId)">
+                            <i class="fas fa-comments"></i> 
+                            {{showEventFeedbacks[event.eventId] ? 'Hide' : 'View'}} Feedback
+                          </button>
+                        </div>
+
+                        <!-- Event Feedbacks Section -->
+                        <div *ngIf="showEventFeedbacks[event.eventId]" class="event-feedbacks mt-3">
+                          <div class="card">
+                            <div class="card-header bg-secondary text-white">
+                              <h6><i class="fas fa-comments"></i> Feedback for {{event.name}}</h6>
+                            </div>
+                            <div class="card-body">
+                              <div *ngIf="!eventFeedbacks[event.eventId] || eventFeedbacks[event.eventId].length === 0" 
+                                   class="alert alert-info">
+                                No feedback submitted for this event yet.
+                              </div>
+                              
+                              <div *ngIf="eventFeedbacks[event.eventId] && eventFeedbacks[event.eventId].length > 0">
+                                <div *ngFor="let feedback of eventFeedbacks[event.eventId]" class="feedback-item mb-3">
+                                  <div class="feedback-header">
+                                    <strong>User: </strong>{{feedback.user?.name || 'Anonymous'}} (Rating: {{feedback.rating}} ★)
+                                    <small class="text-muted float-right">
+                                      <i class="fas fa-clock"></i> {{feedback.submitted_timestamp | date:'medium'}}
+                                    </small>
+                                  </div>
+                                  <div class="feedback-comment mt-2">
+                                    <strong>Comment: </strong>{{feedback.comments}}
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
                         </div>
                       </div>
                     </div>
