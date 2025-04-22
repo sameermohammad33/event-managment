@@ -321,3 +321,382 @@
       justify-content: flex-end;
     }
   }
+
+  /* Notification Styles */
+.notification-popup {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+  animation: fadeIn 0.3s ease;
+}
+
+.notification-card {
+  background: white;
+  border-radius: 10px;
+  width: 90%;
+  max-width: 500px;
+  box-shadow: 0 5px 20px rgba(0, 0, 0, 0.2);
+  overflow: hidden;
+  animation: slideUp 0.3s ease;
+}
+
+.notification-header {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  padding: 1rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.notification-header h4 {
+  margin: 0;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.close-btn {
+  background: none;
+  border: none;
+  color: white;
+  font-size: 1.2rem;
+  cursor: pointer;
+  padding: 0.5rem;
+}
+
+.notification-body {
+  padding: 1.5rem;
+  border-bottom: 1px solid #eee;
+}
+
+.notification-meta {
+  margin-top: 1rem;
+  color: #777;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.notification-footer {
+  padding: 1rem;
+  display: flex;
+  justify-content: flex-end;
+}
+
+/* Animations */
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes slideUp {
+  from { transform: translateY(20px); opacity: 0; }
+  to { transform: translateY(0); opacity: 1; }
+}
+
+/* Admin Notification Section */
+.notification-section {
+  margin-top: 2rem;
+}
+
+
+.users-list-section {
+  margin-top: 20px;
+}
+
+.users-button {
+  background-color: #17a2b8;
+  color: white;
+}
+
+.users-button:hover {
+  background-color: #138496;
+}
+
+.table {
+  margin-top: 20px;
+}
+
+.action-button {
+  margin-right: 5px;
+}
+
+/* Add these styles to your existing CSS */
+.event-feedbacks {
+  margin-top: 15px;
+}
+
+.feedback-item {
+  padding: 10px;
+  border-bottom: 1px solid #eee;
+}
+
+.feedback-item:last-child {
+  border-bottom: none;
+}
+
+.feedback-header {
+  font-size: 0.9rem;
+  color: #555;
+}
+
+.feedback-comment {
+  font-size: 0.95rem;
+  line-height: 1.4;
+}
+/* Add to your home.component.css */
+.event-feedbacks {
+  margin-top: 15px;
+  transition: all 0.3s ease;
+}
+
+.feedback-item {
+  padding: 15px;
+  border-radius: 5px;
+  background-color: #f8f9fa;
+  margin-bottom: 10px;
+  border-left: 4px solid #6c757d;
+}
+
+.feedback-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 8px;
+}
+
+.feedback-comment {
+  padding: 10px;
+  background-color: white;
+  border-radius: 4px;
+  border: 1px solid #dee2e6;
+}
+
+/* Profile Section Styles */
+.profile-button {
+  margin-right: 10px;
+  background-color: #4a6fa5;
+}
+
+.profile-section {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+.profile-card {
+  background-color: white;
+  border-radius: 8px;
+  width: 80%;
+  max-width: 600px;
+  max-height: 80vh;
+  overflow-y: auto;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+.profile-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 15px 20px;
+  border-bottom: 1px solid #eee;
+  background-color: #f8f9fa;
+  border-radius: 8px 8px 0 0;
+}
+
+.profile-body {
+  padding: 20px;
+}
+
+.profile-details {
+  margin-bottom: 20px;
+}
+
+.detail-item {
+  display: flex;
+  margin-bottom: 10px;
+}
+
+.detail-item label {
+  font-weight: bold;
+  width: 150px;
+  color: #555;
+}
+
+.detail-item span {
+  flex: 1;
+}
+
+.update-form, .change-password-form {
+  margin: 20px 0;
+  padding: 15px;
+  background-color: #f8f9fa;
+  border-radius: 5px;
+}
+
+.registered-events {
+  margin-top: 20px;
+}
+
+.event-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px;
+  border-bottom: 1px solid #eee;
+}
+
+.event-item:last-child {
+  border-bottom: none;
+}
+
+.event-info h5 {
+  margin: 0;
+  color: #333;
+}
+
+.profile-footer {
+  display: flex;
+  justify-content: space-between;
+  padding: 15px 20px;
+  border-top: 1px solid #eee;
+  background-color: #f8f9fa;
+  border-radius: 0 0 8px 8px;
+}
+
+.close-btn {
+  background: none;
+  border: none;
+  font-size: 1.2rem;
+  cursor: pointer;
+  color: #777;
+}
+
+/* Quantity Selector Styles */
+.quantity-selector {
+  display: flex;
+  align-items: center;
+  margin-right: 10px;
+  background-color: #f8f9fa;
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.quantity-btn {
+  width: 30px;
+  height: 30px;
+  border: none;
+  background-color: #e9ecef;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background-color 0.3s;
+}
+
+.quantity-btn:hover:not([disabled]) {
+  background-color: #dee2e6;
+}
+
+.quantity-btn[disabled] {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.quantity {
+  width: 30px;
+  text-align: center;
+  font-weight: 600;
+}
+
+/* Sold Out Styles */
+.text-danger {
+  color: #dc3545;
+  font-weight: bold;
+}
+
+.disabled-button {
+  background: linear-gradient(135deg, #dc3545 0%, #a71d2a 100%) !important;
+  cursor: not-allowed;
+}
+
+.event-actions {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.ticket-quantity-selector {
+  display: flex;
+  align-items: center;
+  margin-right: 10px;
+}
+
+.quantity-btn {
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  background-color: #f0f0f0;
+  border: 1px solid #ddd;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 5px;
+}
+
+.quantity-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.quantity {
+  font-weight: bold;
+  min-width: 20px;
+  text-align: center;
+}
+
+.ticket-quantity-selector {
+  display: flex;
+  align-items: center;
+  margin-right: 10px;
+}
+
+.quantity-btn {
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  background-color: #f0f0f0;
+  border: 1px solid #ddd;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 5px;
+}
+
+.quantity-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.quantity {
+  font-weight: bold;
+  min-width: 20px;
+  text-align: center;
+}
