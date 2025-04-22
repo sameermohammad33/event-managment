@@ -35,7 +35,7 @@ export class FeedbackService {
   }
 
   getEventFeedbacks(eventId: number): Observable<any> {
-    return this.http.get(`${API_URL}/Feedback/readAll`, {
+    return this.http.get(`${API_URL}/Feedback/readAll/${eventId}`, {
       headers: {
         'Authorization': `Bearer ${this.authService.getToken()}`
       }
@@ -49,4 +49,17 @@ export class FeedbackService {
       }
     });
   }
+
+//  getFeedbacksByEvent(eventId: number): Observable<any[]> {
+//   return this.http.get<any[]>(`${API_URL}/Feedback/readAll`);
+//  }
+
+getFeedbacksByEvent(eventId: number): Observable<any[]> {
+  return this.http.get<any[]>(`${API_URL}/Feedback/readAll/${eventId}`, {
+    headers: {
+      'Authorization': `Bearer ${this.authService.getToken()}`
+    }
+  });
+}
+  
 }
