@@ -17,6 +17,12 @@
     align-items: center;
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
   }
+
+  .navbar-links {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+  }
   
   .navbar-brand h1 {
     margin: 0;
@@ -45,6 +51,14 @@
     backdrop-filter: blur(10px);
   }
   
+  .profile-button {
+    order: 1;
+  }
+
+  .logout-button {
+    order: 2;
+  }
+
   .nav-button:hover {
     background-color: rgba(255, 255, 255, 0.3);
     transform: translateY(-2px);
@@ -172,6 +186,7 @@
     align-items: center;
     gap: 0.5rem;
     font-size: 1rem;
+    padding: 1%;
   }
   
   .create-button {
@@ -192,6 +207,7 @@
   .delete-button {
     background: linear-gradient(135deg, #ff416c 0%, #ff4b2b 100%);
     color: white;
+    margin-left:  3px;
   }
   
   .edit-button {
@@ -231,7 +247,7 @@
   .events-grid {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
-    gap: 1.5rem;
+    gap: 1rem;
     margin-top: 1.5rem;
   }
   
@@ -239,10 +255,11 @@
     height: 100%;
     display: flex;
     flex-direction: column;
-    border-radius: 12px;
+    border-radius: 6px;
     overflow: hidden;
     box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
     transition: transform 0.3s ease;
+    padding: 1%;
   }
   
   .event-card .card:hover {
