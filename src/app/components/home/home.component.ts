@@ -10,6 +10,8 @@ import { CommonModule, DatePipe } from '@angular/common';
 import { interval } from 'rxjs';
 import { startWith, switchMap } from 'rxjs/operators';
 import { error } from 'console';
+ 
+
 
 @Component({
   selector: 'app-home',
@@ -241,9 +243,12 @@ incrementTicket(eventId: number): void {
     this.ticketQuantities[eventId] = 1;
   }
   const event = this.events.find(e => e.eventId === eventId);
-  if (event && this.ticketQuantities[eventId] < 5 && 
+  if (event && 
+      this.ticketQuantities[eventId] < 5 && 
       this.ticketQuantities[eventId] < event.availableTickets) {
     this.ticketQuantities[eventId]++;
+  } else if (event && this.ticketQuantities[eventId] >= event.availableTickets) {
+    alert(`Only ${event.availableTickets} ticket(s) available!`);
   }
 }
 
@@ -256,38 +261,45 @@ decrementTicket(eventId: number): void {
   }
 }
 
-
-  // Book ticket for an event (for USER)
-  onBookTicket(eventId: number): void {
-    const quantity = this.getTicketQuantity(eventId);
-    const event = this.events.find(e => e.eventId === eventId);
-    
-    if (!event || event.availableTickets <= 0) {
-      alert('No tickets available for this event!');
-      return;
-    }
+// ON Book Ticket (USER ONLY)
+onBookTicket(eventId: number): void {
+  const quantity = this.getTicketQuantity(eventId);
+  const event = this.events.find(e => e.eventId === eventId);
   
-    if (this.userId) {
-      this.ticketService.bookTicket({
-        eventId: eventId,
-        userId: this.userId,
-        quantity: quantity
-      }).subscribe({
-        next: (response: any) => {
-          alert(response || `Successfully booked ${quantity} ticket(s)!`);
-          // Refresh the events list
-          this.loadEvents();
-          // Reset quantity
-          this.ticketQuantities[eventId] = 1;
-        },
-        error: (err) => {
-          console.error('Booking error:', err);
-          alert(err.error?.error || err.error?.message || 
-                'Ticket booking failed. Please try again.');
-        }
-      });
-    }
+  if (!event) {
+    this.showAlert('Event not found!');
+    return;
   }
+
+  if (event.availableTickets <= 0) {
+    this.showAlert('Sorry, this event is completely sold out!');
+    return;
+  }
+
+  if (quantity > event.availableTickets) {
+    this.showAlert(`Only ${event.availableTickets} ticket(s) available! You requested ${quantity}.`);
+    return;
+  }
+
+  if (this.userId) {
+    this.ticketService.bookTicket({
+      eventId: eventId,
+      userId: this.userId,
+      quantity: quantity
+    }).subscribe({
+      next: (response: any) => {
+        this.showAlert(response || `Successfully booked ${quantity} ticket(s)!`);
+        this.loadEvents();
+        this.ticketQuantities[eventId] = 1;
+      },
+      error: (err) => {
+        console.error('Booking error:', err);
+        this.showAlert(err.error?.error || err.error?.message || 
+              'Ticket booking failed. Please try again.');
+      }
+    });
+  }
+}
 
   // Toggle feedback form for a specific event
   toggleFeedbackForm(eventId: number): void {
@@ -517,10 +529,16 @@ loadUserEvents(): void {
   if (this.userId) {
     this.ticketService.getUserTickets(this.userId).subscribe({
       next: (tickets: any[]) => {
-        this.userEvents = tickets.map(ticket => ({
-          ...ticket.event,
-          ticketId: ticket.ticketId
-        }));
+        // Map tickets to include full event details
+        this.userEvents = tickets.map(ticket => {
+          // Create a new object with both ticket and event properties
+          return {
+            ...ticket.event,  // Spread all event properties
+            ticketId: ticket.ticketId,
+            bookingDate: ticket.bookingDate,
+            status: ticket.status
+          };
+        });
       },
       error: (err: any) => {
         console.error('Failed to load user events', err);
@@ -573,7 +591,7 @@ onChangePassword(): void {
     
     this.authService.changePassword(this.userId, passwordData).subscribe({
       next: (response: string) => { // Explicitly type the response
-        alert(response || 'Password changed successfully!');
+        alert( 'Password changed successfully!');
         this.passwordForm.reset();
         this.showChangePasswordForm = false;
       },
@@ -584,7 +602,9 @@ onChangePassword(): void {
   }
 }
 
-
+showAlert(message: string): void {
+  alert(message);
+} 
 
 // cancelRegistration(ticketId: number): void {
 //   if (confirm('Are you sure you want to cancel this registration?')) {
