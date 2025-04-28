@@ -27,14 +27,14 @@
 
   <!-- Beautiful Navbar -->
   <nav class="navbar">
-    <div class="navbar-brand">
+    <div class="navbar-brand ">
       <h1>Event Management System</h1>
     </div>
     <div class="navbar-links">
       <button class="nav-button profile-button" (click)="toggleProfile()">
         <i class="fas fa-user-circle"></i> Profile
       </button>
-      <button class="nav-button" (click)="logout()">
+      <button class="nav-button logout-button" (click)="logout()">
         <i class="fas fa-sign-out-alt"></i> Logout
       </button>
     </div>
@@ -355,10 +355,10 @@
                           </div>
                           
                           <button class="action-button book-button" 
-                                  (click)="onBookTicket(event.eventId)"
-                                  [disabled]="event.availableTickets <= 0">
-                            <i class="fas fa-ticket-alt"></i> Book Ticket
-                          </button>
+        (click)="event.availableTickets <= 0 ? showAlert('Sorry, this event is sold out!') : onBookTicket(event.eventId)"
+        [disabled]="event.availableTickets <= 0">
+  <i class="fas fa-ticket-alt"></i> Book Ticket
+</button>
                           
                           <button class="action-button feedback-button" 
                                   (click)="toggleFeedbackForm(event.eventId)">
@@ -466,9 +466,9 @@
                                       <i class="fas fa-clock"></i> {{feedback.submitted_timestamp | date:'medium'}}
                                     </small>
                                   </div>
-                                  <div class="feedback-comment mt-2">
+                                  <!-- <div class="feedback-comment mt-2">
                                     <strong>Comment: </strong>{{feedback.comments}}
-                                  </div>
+                                  </div> -->
                                 </div>
                               </div>
                             </div>
